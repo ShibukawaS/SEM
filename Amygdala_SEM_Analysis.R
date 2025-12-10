@@ -25,15 +25,21 @@ suppressPackageStartupMessages({
 })
 
 # --- 2. Data Loading ---
-# Automatically detect path (D: or H:)
-paths <- c("D:/Dropbox/QSM_ARCS", "H:/Dropbox/QSM_ARCS")
-proj_path <- paths[file.exists(paths)][1]
-if (is.na(proj_path)) stop("Project directory not found in D:/Dropbox or H:/Dropbox")
+# Check local directory first, then fallback to Dropbox paths
+local_file <- "HC_and_MDDtrim_QSM_NODDI_VOL_FINAL_v2.xlsx"
+dropbox_paths <- c("D:/Dropbox/QSM_ARCS", "H:/Dropbox/QSM_ARCS")
 
-setwd(proj_path)
-cat("Working Directory:", getwd(), "\n")
-
-xlsx_file <- "HC_and_MDDtrim_QSM_NODDI_VOL_FINAL_v2.xlsx"
+if (file.exists(local_file)) {
+  xlsx_file <- local_file
+  cat("Using local data file:", xlsx_file, "\n")
+} else {
+  # Fallback logic
+  proj_path <- dropbox_paths[file.exists(dropbox_paths)][1]
+  if (is.na(proj_path)) stop("Data file not found locally or in Dropbox.")
+  setwd(proj_path)
+  xlsx_file <- local_file
+  cat("Using Dropbox data file in:", getwd(), "\n")
+}
 if (!file.exists(xlsx_file)) stop("Data file not found: ", xlsx_file)
 
 keep_diag <- c("HC","MDD","Sch")
