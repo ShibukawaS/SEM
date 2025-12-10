@@ -1,0 +1,12 @@
+# Data files
+*.xlsx
+*.csv
+*.txt
+
+# R specific
+.Rhistory
+.RData
+.Ruserdata
+
+# System files
+Thumbs.db
